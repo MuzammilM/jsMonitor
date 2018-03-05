@@ -5,6 +5,8 @@ echo '**************************'
 echo '**************************'
 echo `date`
 PATH=$PATH:/usr/local/bin/
+COLOR='\033[0;31m'
+reset=`tput sgr0`
 
 
 if [ ! -f "/home/"$USER"/config/shellscript/jsMonitor.properties" ]; then
