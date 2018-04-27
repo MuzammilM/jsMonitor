@@ -56,7 +56,7 @@ then
         if [ "$status" == "$stoppedValue" ]
                 then
                 tail -n 100 $logFile > $newlogFile
-                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For"$name "PFA with details of exception . Page Breakage" $newlogFile
+                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For"$name" in "$ENV "PFA with details of exception . Page Breakage" $newlogFile
                 java -jar /home/$USER/bin/jars/sms.jar "1234567890,0987654321" $name "Restarted in "$HOSTNAME"-"$ENV
                 /usr/local/bin/forever restart $cmd
         elif [[ (  "$d" -eq 00 && "$h" -eq 00 && "$m" -lt 1 ) ]]
@@ -64,7 +64,7 @@ then
                 echo "Restarted"
                 echo 'Restarted' >> /home/$USER/logs/cronLogs/jsMonitorV3.log
                 tail -n 100 $logFile > $newlogFile
-                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For "$name "PFA with details of exception . Page Breakage" $newlogFile
+                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For "$name" in "$ENV "PFA with details of exception . Page Breakage" $newlogFile
                 java -jar /home/$USER/bin/jars/sms.jar "1234567890,0987654321" $name "Restarted in "$HOSTNAME"-"$ENV
         else
         echo ':)'
