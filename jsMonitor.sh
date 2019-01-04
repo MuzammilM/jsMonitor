@@ -10,7 +10,7 @@ reset=`tput sgr0`
 if [ ! -f "/home/"$USER"/config/shellscript/jsMonitor.properties" ]; then
         echo -e "${COLOR}Property file not found. Please create one called jsMonitor.properties within ~/config/shellscript ${reset}"
         echo -e "${COLOR}Format${reset}"
-        `curl https://raw.githubusercontent.com/MuzammilM/jsMonitor/master/jsMonitor.properties`
+        curl https://raw.githubusercontent.com/MuzammilM/jsMonitor/master/jsMonitor.properties
         exit
 fi
 
