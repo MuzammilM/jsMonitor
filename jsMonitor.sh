@@ -1,25 +1,18 @@
+echo $USER
 echo '**************************'
-#echo "JsMonitor Version 5 -- 20170310"
-#echo "Authored by Muzammil"
-# Last updated on 05/03/2017
+echo "JsMonitor Version 6 -- 20190104"
+echo "Authored by Muzammil"
 echo '**************************'
 echo `date`
+function sendlog() {
+                name=$1
+                logFile=$2
+                tail -n 2000 $logFile > $newlogFile
+                echo "PFA with details of exception . Page Breakage." | mail -r USER -a $newlogFile -s "Logs For"$name" in "$ENV -c email1@xyz.com email2@xyz.com
+                bash ~/bin/shellscript/slackBot.sh webgroup $name "Restarted in "$HOSTNAME"-"$ENV
+}
+mkdir -p ~/logs/shellLogs
 PATH=$PATH:/usr/local/bin/
-COLOR='\033[0;31m'
-reset=`tput sgr0`
-
-
-if [ ! -f "/home/"$USER"/config/shellscript/jsMonitor.properties" ]; then
-        echo -e "${COLOR}Property file not found. Please create one called jsMonitor.properties within ~/config/shellscript ${reset}"
-        exit
-fi
-
-if [ ! -d "/home/"$USER"/logs/shellLogs/" ]; then
-        mkdir -p ~/logs/shellLogs/
-        exit
-fi
-
-config/shellscript/jsMonitor.properties
 /usr/local/bin/forever columns rm script
 /usr/local/bin/forever columns add script
 /usr/local/bin/forever columns add dir
@@ -32,7 +25,7 @@ echo "nodeScript="$nodeScript
 cmd=`/usr/local/bin/forever list --plain | grep "$nodeScript" | awk '{print $3}'`
 logFile=`/usr/local/bin/forever list --plain | grep "$nodeScript" | awk '{print $7}'`
 status=`/usr/local/bin/forever list --plain | grep "$nodeScript" | awk '{print $8}'`
-newlogFile="/home/mpuser/logs/foreverLogs/"$cmd".log"
+newlogFile="/home/"$USER"/logs/foreverLogs/"$cmd".log"
 echo "cmd="$cmd
 echo "status="$status
 echo "logFile="$logFile
@@ -48,24 +41,19 @@ then
 cd $dir
 /usr/local/bin/forever start $nodeScript
 echo 'process---------->'$nodeScript'------->started @'`date` >> ~/logs/shellLogs/jsLog.log
-# java -jar /home/$USER/bin/jars/sms.jar "1234567890,0987654321" $name "Restarted in "$HOSTNAME"-"$ENV
+bash ~/bin/shellscript/slackBot.sh webgroup $name "Restarted in "$HOSTNAME"-"$ENV
 echo $name
 elif [ $cnt != 0 ]
 then
         stoppedValue="STOPPED"
         if [ "$status" == "$stoppedValue" ]
                 then
-                tail -n 100 $logFile > $newlogFile
-                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For"$name" in "$ENV "PFA with details of exception . Page Breakage" $newlogFile
-                java -jar /home/$USER/bin/jars/sms.jar "1234567890,0987654321" $name "Restarted in "$HOSTNAME"-"$ENV
+                sendlog $name $logFile
                 /usr/local/bin/forever restart $cmd
         elif [[ (  "$d" -eq 00 && "$h" -eq 00 && "$m" -lt 1 ) ]]
                 then
                 echo "Restarted"
-                echo 'Restarted' >> /home/$USER/logs/cronLogs/jsMonitorV3.log
-                tail -n 100 $logFile > $newlogFile
-                java -jar bin/jars/emailAttachments.jar config/emailProps.properties "testuser@gmail.com" "testuser2@gmail.com" "foreverLog For "$name" in "$ENV "PFA with details of exception . Page Breakage" $newlogFile
-                java -jar /home/$USER/bin/jars/sms.jar "1234567890,0987654321" $name "Restarted in "$HOSTNAME"-"$ENV
+                sendlog $name $logFile
         else
         echo ':)'
 fi
