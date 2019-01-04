@@ -4,6 +4,20 @@ echo "JsMonitor Version 6 -- 20190104"
 echo "Authored by Muzammil"
 echo '**************************'
 echo `date`
+COLOR='\033[0;31m'
+reset=`tput sgr0`
+
+if [ ! -f "/home/"$USER"/config/shellscript/jsMonitor.properties" ]; then
+        echo -e "${COLOR}Property file not found. Please create one called jsMonitor.properties within ~/config/shellscript ${reset}"
+        echo -e "${COLOR}Format${reset}"
+        `curl https://raw.githubusercontent.com/MuzammilM/jsMonitor/master/jsMonitor.properties`
+        exit
+fi
+
+if [ ! -d "/home/"$USER"/logs/shellLogs/" ]; then
+        mkdir -p ~/logs/shellLogs/
+        exit
+fi
 if ! [ -x "$(command -v mail)" ]; then
   echo "Installing additional mailer package"
   curl -s https://raw.githubusercontent.com/MuzammilM/scripts/master/mail/mailSetup.sh | sudo bash -s notest
@@ -16,7 +30,6 @@ function sendlog() {
                 echo "PFA with details of exception . Page Breakage." | mail -r USER -a $newlogFile -s "Logs For"$name" in "$ENV -c email1@xyz.com email2@xyz.com
                 bash ~/bin/shellscript/slackBot.sh webgroup $name "Restarted in "$HOSTNAME"-"$ENV
 }
-mkdir -p ~/logs/shellLogs
 PATH=$PATH:/usr/local/bin/
 /usr/local/bin/forever columns rm script
 /usr/local/bin/forever columns add script
