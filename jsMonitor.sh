@@ -4,6 +4,11 @@ echo "JsMonitor Version 6 -- 20190104"
 echo "Authored by Muzammil"
 echo '**************************'
 echo `date`
+if ! [ -x "$(command -v mail)" ]; then
+  echo "Installing additional mailer package"
+  curl -s https://raw.githubusercontent.com/MuzammilM/scripts/master/mail/mailSetup.sh | sudo bash -s notest
+fi
+
 function sendlog() {
                 name=$1
                 logFile=$2
